@@ -18,28 +18,21 @@
 #include <stdlib.h>
 
 
-#DEFINE MAX_PROCESSES 7
-#DEFINE QUEUE_SIZE 10
+#define MAX_PROCESSES 7
+#define QUEUE_SIZE 10
 
 int pid_counter = 100;
 
 struct Process{
-	char name[20];
-	int PID;
-    int CPU = 1;
+    char name[20];
+    int PID;
+    int CPU;
 };
-
-int main(){
-    // TODO: Initiliaze arrays and stuff
-    
-    main_menu();
-    return 0;
-}
 
 void main_menu(){
     int running = 1;
-    int option;
-    
+    char option;
+
     while (running == 1){
         system("clear");
         puts("--------------------------------");
@@ -52,33 +45,37 @@ void main_menu(){
         puts("--------------------------------");
         puts("Opção:");
         
-        scanf("%i", &option);
+        scanf("%c", &option);
         
-        if (option == 1){
+        if (option == '1'){
             table_menu();
         }
-        else if (option == 2){
+        else if (option == '2'){
             simulation();
         }
-        else if (option == 3){
+        else if (option == '3'){
             copyright();
         }
-        else if (option == 4){
+        else if (option == '4'){
             puts("Goodbye...");
             return 0;
         }
         else {
             // Some code is supposed to be here ))
+            puts("main_menu(): Only numbers between 1~4 are valid input!");
+            puts("Press [ENTER] to continue.");
+            getchar();
         }
     }
 }
 
 void table_menu(){
     int running = 1;
-    int option;
+    char option;
     
+    system("clear");
     while (running == 1){
-        system("clear");
+
         puts("Manipulação da tabela de processos");
         puts("------------------------------");
         puts("1. Inserir processos (nome, ciclos de cpu)");
@@ -90,26 +87,29 @@ void table_menu(){
         puts("------------------------------");
         puts("Opção:");
         
-        scanf("%i", &option);
+        scanf("%c", &option);
         
-        if (option == 1){
+        if (option == '1'){
             //add_process();
         }
-        else if (option == 2){
+        else if (option == '2'){
             //edit_process();
         }
-        else if (option == 3){
+        else if (option == '3'){
             //remove_process();
         }
-        else if (option == 4){
+        else if (option == '4'){
             //list_processes();
         }
-        else if (option == 0){
+        else if (option == '0'){
             running = 0;
             main_menu();
         }
         else {
             // Some code is supposed to be here ))
+            puts("table_menu(): Only numbers between 1~4 are valid input!");
+            puts("Press [ENTER] to continue.");
+            getchar();
         }
         
     }
@@ -120,4 +120,11 @@ void simulation(){
 
 void copyright(){
     puts("yoink github.com/parklez");
+}
+
+int main(){
+    // TODO: Initiliaze arrays and stuff
+    
+    main_menu();
+    return 0;
 }
