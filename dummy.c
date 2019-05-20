@@ -33,11 +33,127 @@ int process_counter = 0;
 Process process_array[MAX_PROCESSES];
 int queue[QUEUE_SIZE];
 
+
+void sort_queue(){
+    // big iq
+    int sorted_queue[QUEUE_SIZE];
+    int l = 0;
+    int i = 0;
+    int smallest;
+
+    // Getting a first value for comparison
+    for (;i < QUEUE_SIZE;i++){
+        if (queue[i] != -1){
+            smallest = process_array[queue[i]].PID;
+            break;
+        }
+    }
+
+    // Going through all these great memes to find out smallest of them all
+    // ->Code breaks when trying to find a next value for comparison
+    while (l < QUEUE_SIZE){
+        i = l;
+        for (; i < QUEUE_SIZE; i++){
+            if (queue[i] != -1){
+                if (process_array[queue[i]].PID < smallest){
+                    smallest = process_array[queue[i]].PID;
+                    sorted_queue[l] = queue[i];
+                }
+            }
+        }
+        l++;
+    }
+
+    // HandsUp
+    for (i = 0; i < QUEUE_SIZE; i++){
+        queue[i] = -1;
+    }
+    
+    for (i = 0; i < process_counter; i++){
+        queue[i] = sorted_queue[i];
+    }
+}
+
 // Functions
 void simulation(){
-    //TODO: Sort queue by process_array[i].PID
-    //TODO: Code the actual simulation
+    //TODO: Sort queue by process_array[i].PID *
     //TODO: Save results into a file 
+
+    system("clear");
+    puts("Simulação");
+    puts("-----------------------");
+    puts("PID - CPU - Nome");
+
+    int Cqueue[QUEUE_SIZE];
+    Process Cprocess_array[MAX_PROCESSES];
+
+    // Copying process_array and queue
+    int i = 0;
+
+    for (i = 0; i < QUEUE_SIZE; i++){
+        Cqueue[i] = queue[i];
+
+        if (Cqueue[i] != -1){
+            strcpy(Cprocess_array[Cqueue[i]].name, process_array[Cqueue[i]].name);
+            Cprocess_array[Cqueue[i]].PID = process_array[Cqueue[i]].PID;
+            Cprocess_array[Cqueue[i]].CPU = process_array[Cqueue[i]].CPU;
+        }
+    }
+
+    // Storing in ascending order the index of the processe that's over
+    int finished[QUEUE_SIZE];
+    int f = 0;
+
+    // Finding out which process needs the most cycles
+    int biggest_CPU = 0;
+    for (i = 0; i < QUEUE_SIZE;i++){
+        if (Cqueue[i] != -1){
+            if (biggest_CPU < Cprocess_array[Cqueue[i]].CPU){
+                biggest_CPU = Cprocess_array[Cqueue[i]].CPU;
+            }
+        }
+    }
+
+    // Simulation
+    int j = 0;
+    // For as long as the longest proccess needs to be calculated for
+    for (;j < biggest_CPU;j++){
+        // For each process in the queue
+        for (i = 0; i < QUEUE_SIZE; i++){
+            // if we have an process
+            if (Cqueue[i] != -1){
+                // if the process has more than 0 cycles to go through
+                if (Cprocess_array[Cqueue[i]].CPU > 0){
+                    printf("%i - %i   - %s\n", Cprocess_array[Cqueue[i]].PID, Cprocess_array[Cqueue[i]].CPU, Cprocess_array[Cqueue[i]].name);
+                    Cprocess_array[Cqueue[i]].CPU -= 1;
+                }
+                // If the process is now finished, store its index into the finished array,
+                // keeping track of how many processes are there,
+                // as well as making sure the process doesn't fall here again by setting its CPU to -1.
+                if (Cprocess_array[Cqueue[i]].CPU == 0){
+                    finished[f] = Cqueue[i];
+                    Cprocess_array[Cqueue[i]].CPU = -1;
+                    f++;
+                }
+            }
+        }
+    }
+
+     
+    // Printing results
+    puts("-----------------------");
+    puts("Ordem de finalização:");
+    puts("-----------------------");
+    puts("Lugar - PID - CPU - Nome");
+    for (i = 0; i < f; i++){
+        printf("%iº    - %i - %i   - %s\n", i+1, Cprocess_array[finished[i]].PID, process_array[finished[i]].CPU, Cprocess_array[finished[i]].name);
+    }
+
+    // Code to write the final results into a text file goes here
+
+    puts("\nAperte [ENTER] para voltar ao menu principal.");
+    getchar();
+    
 }
 
 // https://stackoverflow.com/questions/17318886/fflush-is-not-working-in-linux
@@ -84,6 +200,9 @@ void add_process(){
 }
 
 void list_processes(){
+
+    //sort_queue();
+
     int i = 0;
 
     system("clear");
