@@ -368,13 +368,7 @@ void table_menu(){
 
 void copyright(){
     system("clear");
-
-	puts("* Alunos:");
-	puts("* Murilo Ceotto Azzi");
-	puts("* Renan Gaspar Alves Cabral");
-	puts("* Rodrigo Vieitez do Nascimento");
-	puts("* Giovani Gualtieri Menuzzo");
-    puts("\nyoink github.com/parklez");
+    puts("yoink github.com/parklez");
     puts("\nPress [ENTER] to return.");
     getchar();
 }
