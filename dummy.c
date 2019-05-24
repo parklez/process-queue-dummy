@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 
 #define MAX_PROCESSES 7
@@ -76,7 +77,6 @@ void sort_queue(){
 
 // Functions
 void simulation(){
-    //TODO: Save results into a file 
 
     if (process_counter == 0){
         puts("simulation(): Lista de processos vazia, adicione um processo para simular!");
@@ -135,6 +135,7 @@ void simulation(){
                 if (Cprocess_array[Cqueue[i]].CPU > 0){
                     printf("%i - %i   - %s\n", Cprocess_array[Cqueue[i]].PID, Cprocess_array[Cqueue[i]].CPU, Cprocess_array[Cqueue[i]].name);
                     Cprocess_array[Cqueue[i]].CPU -= 1;
+					sleep(1);
                 }
                 // If the process is now finished, store its index into the finished array,
                 // keeping track of how many processes are there,
@@ -166,8 +167,8 @@ void simulation(){
         fprintf(writer, "%iº    - %i - %i   - %s\n", i+1, Cprocess_array[finished[i]].PID, process_array[finished[i]].CPU, Cprocess_array[finished[i]].name);
     }
     fclose(writer);
-    puts("Resultado salvo em 'result.txt'.");
-    puts("\nAperte [ENTER] para voltar ao menu principal.");
+    puts("\nResultado salvo em 'result.txt'.");
+    puts("Aperte [ENTER] para voltar ao menu principal.");
     getchar();
     
 }
@@ -200,7 +201,7 @@ void add_process(){
 
     // Adding a new process to the array
     system("clear");
-    puts("Digite o nome do processo:");
+    puts("Digite o nome do processo (sem espaços):");
     scanf("%s", process_array[i].name);
     clean_stdin();
 
@@ -367,8 +368,14 @@ void table_menu(){
 
 void copyright(){
     system("clear");
-    puts("yoink github.com/parklez");
-    puts("Press [ENTER] to return.");
+
+	puts("* Alunos:");
+	puts("* Murilo Ceotto Azzi");
+	puts("* Renan Gaspar Alves Cabral");
+	puts("* Rodrigo Vieitez do Nascimento");
+	puts("* Giovani Gualtieri Menuzzo");
+    puts("\nyoink github.com/parklez");
+    puts("\nPress [ENTER] to return.");
     getchar();
 }
 
