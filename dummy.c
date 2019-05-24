@@ -35,49 +35,58 @@ int queue[QUEUE_SIZE];
 
 
 void sort_queue(){
-    // big iq
-    int sorted_queue[QUEUE_SIZE];
-    int l = 0;
-    int i = 0;
-    int smallest;
+    // If there's no processes, no need to sort anything    
+    if (process_counter == 0){
+        return;
+    }
+    // big iq part of the code
+    // Making a smaller queue with only processes that exist
+    int Cqueue[process_counter];
 
-    // Getting a first value for comparison
+    int i = 0;
+    int j = 0;
     for (;i < QUEUE_SIZE;i++){
         if (queue[i] != -1){
-            smallest = process_array[queue[i]].PID;
-            break;
+            Cqueue[j] = queue[i];
+            j++;
         }
     }
 
-    // Going through all these great memes to find out smallest of them all
-    // ->Code breaks when trying to find a next value for comparison
-    while (l < QUEUE_SIZE){
-        i = l;
-        for (; i < QUEUE_SIZE; i++){
-            if (queue[i] != -1){
-                if (process_array[queue[i]].PID < smallest){
-                    smallest = process_array[queue[i]].PID;
-                    sorted_queue[l] = queue[i];
-                }
+    // YOINK https://www.programmingsimplified.com/c/source-code/c-program-bubble-sort
+    int n = process_counter, c, d, swap;
+    for (c = 0 ; c < n - 1; c++){
+        for (d = 0 ; d < n - c - 1; d++){
+            if (process_array[Cqueue[d]].PID > process_array[Cqueue[d+1]].PID){
+                swap = Cqueue[d];
+                Cqueue[d] = Cqueue[d+1];
+                Cqueue[d+1] = swap;
             }
         }
-        l++;
     }
 
-    // HandsUp
+    // clearing up queue and storing stuff in order
     for (i = 0; i < QUEUE_SIZE; i++){
         queue[i] = -1;
     }
-    
     for (i = 0; i < process_counter; i++){
-        queue[i] = sorted_queue[i];
+        queue[i] = Cqueue[i];
     }
+
 }
 
 // Functions
 void simulation(){
-    //TODO: Sort queue by process_array[i].PID *
     //TODO: Save results into a file 
+
+    if (process_counter == 0){
+        puts("simulation(): Lista de processos vazia, adicione um processo para simular!");
+        puts("Aperte [ENTER] para voltar ao menu principal.");
+        getchar();
+        return;
+    }
+
+    // sorting the queue by PID
+    sort_queue();
 
     system("clear");
     puts("Simulação");
@@ -150,7 +159,14 @@ void simulation(){
     }
 
     // Code to write the final results into a text file goes here
-
+    FILE *writer;
+    writer = fopen("result.txt", "w");
+    fprintf(writer, "Lugar - PID - CPU - Nome\n");
+    for (i = 0; i < f; i++){
+        fprintf(writer, "%iº    - %i - %i   - %s\n", i+1, Cprocess_array[finished[i]].PID, process_array[finished[i]].CPU, Cprocess_array[finished[i]].name);
+    }
+    fclose(writer);
+    puts("Resultado salvo em 'result.txt'.");
     puts("\nAperte [ENTER] para voltar ao menu principal.");
     getchar();
     
@@ -168,8 +184,8 @@ void add_process(){
 
     // Check if the user is allowed to create a process
     if (process_counter >= MAX_PROCESSES){
-            printf("add_process(): Process queue is full [Max: %i]. Remove a process to add a new one!\n", MAX_PROCESSES);
-            puts("Press [ENTER] to continue.");
+            printf("add_process(): Fila de processos está cheia [Max: %i]. Remova algum processo para adicionar outro!\n", MAX_PROCESSES);
+            puts("Aperte [ENTER] para voltar ao menu de manipulação.");
             getchar();
             return;
     }
@@ -201,7 +217,7 @@ void add_process(){
 
 void list_processes(){
 
-    //sort_queue();
+    sort_queue();
 
     int i = 0;
 
