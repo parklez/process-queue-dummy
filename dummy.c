@@ -109,7 +109,7 @@ void simulation(){
         }
     }
 
-    // Storing in ascending order the index of the processe that's over
+    // Storing in ascending order the index of the process that's over
     int finished[QUEUE_SIZE];
     int f = 0;
 
@@ -129,7 +129,7 @@ void simulation(){
     for (;j < biggest_CPU;j++){
         // For each process in the queue
         for (i = 0; i < QUEUE_SIZE; i++){
-            // if we have an process
+            // if we have a process
             if (Cqueue[i] != -1){
                 // if the process has more than 0 cycles to go through
                 if (Cprocess_array[Cqueue[i]].CPU > 0){
@@ -138,7 +138,7 @@ void simulation(){
 					sleep(1);
                 }
                 // If the process is now finished, store its index into the finished array,
-                // keeping track of how many processes are there,
+                // keeping track of how many processes there are,
                 // as well as making sure the process doesn't fall here again by setting its CPU to -1.
                 if (Cprocess_array[Cqueue[i]].CPU == 0){
                     finished[f] = Cqueue[i];
